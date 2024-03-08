@@ -1,14 +1,54 @@
 import React from 'react';
 import TaskCounter from './TaskCounter';
 
-const TaskList = ({
-  task,
-  handleCompleteTask,
-  handleEditTask,
-  handleEditingTask,
-  handleSaveTask,
-  handleDeleteTask,
-}) => {
+const TaskList = ({ task, setTask }) => {
+  const handleCompleteTask = (id) => {
+    const newTask = task.map((t) => {
+      if (t.id === id) {
+        t.status = t.status === 0 ? 1 : 0;
+      }
+      return t;
+    });
+    setTask(newTask);
+  };
+
+  const handleEditTask = (id) => {
+    const newTask = task.map((t) => {
+      if (t.id === id) {
+        t.mode = t.mode === '' ? 'edit' : '';
+      }
+      return t;
+    });
+    setTask(newTask);
+  };
+
+  const handleEditingTask = (id, value) => {
+    const newTask = task.map((task) => {
+      if (task.id === id) {
+        task.title = value;
+      }
+      return task;
+    });
+    setTask(newTask);
+  };
+
+  const handleSaveTask = (id) => {
+    const newTask = task.map((t) => {
+      if (t.id === id) {
+        t.mode = t.mode === 'edit' ? '' : 'edit';
+      }
+      return t;
+    });
+    setTask(newTask);
+  };
+
+  const handleDeleteTask = (id) => {
+    if (window.confirm('本当に削除してもよろしいですか？')) {
+      const newTask = task.filter((t) => t.id !== id);
+      setTask(newTask);
+    }
+  };
+
   return (
     <div className="cardItem">
       <TaskCounter task={task} />

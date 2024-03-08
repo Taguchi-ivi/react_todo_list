@@ -1,6 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { getUniqueStr } from '../lib/uniq';
 
-const Header = ({ inputTask, setInputTask, addTask }) => {
+const Header = ({ setTask }) => {
+  const [inputTask, setInputTask] = useState('');
+  const addTask = () => {
+    if (inputTask === '') return;
+
+    const newTask = {
+      id: getUniqueStr(15),
+      title: inputTask,
+      status: 0,
+      mode: '',
+    };
+    setTask((prevTask) => [...prevTask, newTask]);
+    setInputTask('');
+  };
+
   return (
     <div className="cardTitle">
       <h1 className="title">Todo List 🚀</h1>
