@@ -4,16 +4,16 @@ import { getTaskCount, getUniqueStr } from './lib/uniq';
 
 function App() {
   const [inputTask, setInputTask] = useState('');
-  const [task, setTask] = useState([]); // status = 0: 未完了, 1: 完了済み | mode = add: 追加, edit: 編集
+  const [task, setTask] = useState([]); // status = 0: 未完了, 1: 完了済み | mode = edit: 編集, "": その他
 
-  const addTask = (e) => {
+  const addTask = () => {
     if (inputTask === '') return;
 
     const newTask = {
       id: getUniqueStr(15),
       title: inputTask,
       status: 0,
-      mode: 'add',
+      mode: '',
     };
     setTask((prevTask) => [...prevTask, newTask]);
     setInputTask('');
@@ -27,6 +27,43 @@ function App() {
       return t;
     });
     setTask(newTask);
+  };
+
+  const handleEditTask = (id) => {
+    const newTask = task.map((t) => {
+      if (t.id === id) {
+        t.mode = t.mode === '' ? 'edit' : '';
+      }
+      return t;
+    });
+    setTask(newTask);
+  };
+
+  const handleEditingTask = (id, value) => {
+    const newTask = task.map((task) => {
+      if (task.id === id) {
+        task.title = value;
+      }
+      return task;
+    });
+    setTask(newTask);
+  };
+
+  const handleSaveTask = (id) => {
+    const newTask = task.map((t) => {
+      if (t.id === id) {
+        t.mode = t.mode === 'edit' ? '' : 'edit';
+      }
+      return t;
+    });
+    setTask(newTask);
+  };
+
+  const handleDeleteTask = (id) => {
+    if (window.confirm('本当に削除してもよろしいですか？')) {
+      const newTask = task.filter((t) => t.id !== id);
+      setTask(newTask);
+    }
   };
 
   return (
@@ -74,11 +111,41 @@ function App() {
                     handleCompleteTask(t.id);
                   }}
                 />
-                <p className="cardItemP">{t.title}</p>
+                {t.mode === 'edit' ? (
+                  <input
+                    type="text"
+                    value={t.title}
+                    className="newEditInput"
+                    onChange={(e) => {
+                      handleEditingTask(t.id, e.target.value);
+                    }}
+                  />
+                ) : (
+                  <p className="cardItemP">{t.title}</p>
+                )}
                 <div className="cardItemBtns">
-                  <button className="keep">保存</button>
-                  <button className="edit">編集</button>
-                  <button className="del">削除</button>
+                  {t.mode === 'edit' ? (
+                    <button
+                      className="keep"
+                      onClick={() => handleSaveTask(t.id)}
+                    >
+                      保存
+                    </button>
+                  ) : (
+                    <button
+                      className="edit"
+                      onClick={() => handleEditTask(t.id)}
+                    >
+                      編集
+                    </button>
+                  )}
+                  <button
+                    className="del"
+                    onClick={() => handleDeleteTask(t.id)}
+                    disabled={t.mode === 'edit'}
+                  >
+                    削除
+                  </button>
                 </div>
               </li>
             ))}
