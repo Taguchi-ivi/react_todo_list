@@ -19,6 +19,16 @@ function App() {
     setInputTask('');
   };
 
+  const handleCompleteTask = (id) => {
+    const newTask = task.map((t) => {
+      if (t.id === id) {
+        t.status = t.status === 0 ? 1 : 0;
+      }
+      return t;
+    });
+    setTask(newTask);
+  };
+
   return (
     <div className="App">
       <div className="container">
@@ -53,16 +63,21 @@ function App() {
               <li
                 key={t.id}
                 className="cardItemWrapper"
+                style={{
+                  textDecoration: t.status === 1 ? 'line-through' : 'none',
+                }}
               >
                 <input
                   type="checkbox"
-                  className="cardItemCheckbox active"
                   name="taskCheckbox"
+                  onChange={() => {
+                    handleCompleteTask(t.id);
+                  }}
                 />
                 <p className="cardItemP">{t.title}</p>
                 <div className="cardItemBtns">
                   <button className="keep">保存</button>
-                  <button className="edit active">編集</button>
+                  <button className="edit">編集</button>
                   <button className="del">削除</button>
                 </div>
               </li>
