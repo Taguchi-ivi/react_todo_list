@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getUniqueStr } from '../lib/uniq';
 
-const Header = ({ setTask }) => {
+const Header = ({ setTasks }) => {
   const [inputTask, setInputTask] = useState('');
   const addTask = () => {
     if (inputTask === '') return;
@@ -9,10 +9,10 @@ const Header = ({ setTask }) => {
     const newTask = {
       id: getUniqueStr(15),
       title: inputTask,
-      status: 0,
-      mode: '',
+      isCompleted: false,
+      isEdit: false,
     };
-    setTask((prevTask) => [...prevTask, newTask]);
+    setTasks((prevTasks) => [...prevTasks, newTask]);
     setInputTask('');
   };
 

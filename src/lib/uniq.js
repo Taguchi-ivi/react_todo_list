@@ -7,8 +7,12 @@ export const getUniqueStr = (myStrong) => {
   );
 };
 
-// 0: 未完了 / 1: 完了済み / 2: 全て
+// status -> all | completed | incomplete
 export const getTaskCount = (task, status) => {
-  if (status === 2) return task.length;
-  return task.filter((t) => t.status === status).length;
+  if (status === 'all') return task.length;
+  if (status === 'completed') return task.filter((t) => t.isCompleted).length;
+  if (status === 'incomplete') return task.filter((t) => !t.isCompleted).length;
+  throw new Error(
+    "status is invalid. status must be 'all' | 'completed' | 'incomplete'"
+  );
 };

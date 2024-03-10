@@ -4,14 +4,14 @@ import Header from './component/Header';
 import TaskList from './component/TaskList';
 
 function App() {
-  const [task, setTask] = useState([]); // status = 0: 未完了, 1: 完了済み | mode = edit: 編集, "": その他
+  const [tasks, setTasks] = useState([]); // id | title | isCompleted | isEdit
 
   return (
     <div className="container">
-      <Header setTask={setTask} />
+      <Header setTasks={setTasks} />
       <TaskList
-        task={task}
-        setTask={setTask}
+        tasks={tasks}
+        setTasks={setTasks}
       />
     </div>
   );

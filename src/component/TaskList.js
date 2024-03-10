@@ -1,64 +1,54 @@
 import React from 'react';
 import TaskCounter from './TaskCounter';
 
-const TaskList = ({ task, setTask }) => {
+const TaskList = ({ tasks, setTasks }) => {
   const handleCompleteTask = (id) => {
-    const newTask = task.map((t) => {
+    const newTask = tasks.map((t) => {
       if (t.id === id) {
-        t.status = t.status === 0 ? 1 : 0;
+        t.isCompleted = !t.isCompleted;
       }
       return t;
     });
-    setTask(newTask);
+    setTasks(newTask);
   };
 
-  const handleEditTask = (id) => {
-    const newTask = task.map((t) => {
+  const handleChangeEditMode = (id) => {
+    const newTask = tasks.map((t) => {
       if (t.id === id) {
-        t.mode = t.mode === '' ? 'edit' : '';
+        t.isEdit = !t.isEdit;
       }
       return t;
     });
-    setTask(newTask);
+    setTasks(newTask);
   };
 
   const handleEditingTask = (id, value) => {
-    const newTask = task.map((task) => {
+    const newTask = tasks.map((task) => {
       if (task.id === id) {
         task.title = value;
       }
       return task;
     });
-    setTask(newTask);
-  };
-
-  const handleSaveTask = (id) => {
-    const newTask = task.map((t) => {
-      if (t.id === id) {
-        t.mode = t.mode === 'edit' ? '' : 'edit';
-      }
-      return t;
-    });
-    setTask(newTask);
+    setTasks(newTask);
   };
 
   const handleDeleteTask = (id) => {
     if (window.confirm('本当に削除してもよろしいですか？')) {
-      const newTask = task.filter((t) => t.id !== id);
-      setTask(newTask);
+      const newTasks = tasks.filter((t) => t.id !== id);
+      setTasks(newTasks);
     }
   };
 
   return (
     <div className="cardItem">
-      <TaskCounter task={task} />
+      <TaskCounter tasks={tasks} />
       <ul>
-        {task.map((t) => (
+        {tasks.map((t) => (
           <li
             key={t.id}
             className="cardItemWrapper"
             style={{
-              textDecoration: t.status === 1 ? 'line-through' : 'none',
+              textDecoration: t.isCompleted ? 'line-through' : 'none',
             }}
           >
             <input
@@ -68,7 +58,7 @@ const TaskList = ({ task, setTask }) => {
                 handleCompleteTask(t.id);
               }}
             />
-            {t.mode === 'edit' ? (
+            {t.isEdit ? (
               <input
                 type="text"
                 value={t.title}
@@ -81,17 +71,17 @@ const TaskList = ({ task, setTask }) => {
               <p className="cardItemP">{t.title}</p>
             )}
             <div className="cardItemBtns">
-              {t.mode === 'edit' ? (
+              {t.isEdit ? (
                 <button
                   className="keep"
-                  onClick={() => handleSaveTask(t.id)}
+                  onClick={() => handleChangeEditMode(t.id)}
                 >
                   保存
                 </button>
               ) : (
                 <button
                   className="edit"
-                  onClick={() => handleEditTask(t.id)}
+                  onClick={() => handleChangeEditMode(t.id)}
                 >
                   編集
                 </button>
@@ -99,7 +89,7 @@ const TaskList = ({ task, setTask }) => {
               <button
                 className="del"
                 onClick={() => handleDeleteTask(t.id)}
-                disabled={t.mode === 'edit'}
+                disabled={t.isEdit}
               >
                 削除
               </button>
